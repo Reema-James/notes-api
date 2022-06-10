@@ -3,8 +3,9 @@ const express=require('express');
 const router= express.Router();
 
 router.get(`/`, async(req,res)=>{
-    const groupList=await Group.find();
-    res.send(groupList);
+    res.send({
+        "name" : "tuty"
+    });
 })
 
 module.exports=router;

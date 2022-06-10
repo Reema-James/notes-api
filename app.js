@@ -1,22 +1,21 @@
-const bodyParser=require('bodyParser');
+const bodyParser=require('body-parser');
 const express= require('express');
 const app=express();
 const jsonfile= require('jsonfile');
 app.use(bodyParser.json());
 const groupRoutes=require('./routes/groups');
 
-app.use(`${api}/groups`, groupRoutes);
+app.use(`/`, groupRoutes);
 
 
 
+app.get(`/`, async(req,res)=>{
+    res.send({
+        "name" : "tuty"
+    });
+})
 
-//database
 
-const path= require('./database.json')
-jsonfile.readFile(path, (err,data)=>{
-    if(err){
-        console.log(err);
-        return;
-    }
-    console.log(data);
+app.listen(3000, ()=>{
+    console.log('server is running http://localhost:3000');
 })
