@@ -1,20 +1,16 @@
 const bodyParser=require('body-parser');
 const express= require('express');
 const app=express();
-const jsonfile= require('jsonfile');
+const cors=require('cors');
 app.use(bodyParser.json());
-const groupRoutes=require('./routes/groups');
+app.use(cors());
 
-app.use(`/`, groupRoutes);
-
-
-
-app.get(`/`, async(req,res)=>{
-    res.send({
-        "name" : "tuty"
-    });
-})
-
+app.get ('/getData', (req,res) => {
+    res.json({
+        "statusCode":200,
+        "statusMessage":"SUCCESS"
+    })
+});
 
 app.listen(3000, ()=>{
     console.log('server is running http://localhost:3000');
