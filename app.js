@@ -9,13 +9,7 @@ const port = 3000;
 app.use(bodyParser.json());
 app.use(cors());
 app.use("/", groupRoutes);
-app.get ('/getData', (req,res) => {
 
-    res.json({
-        "statusCode":200,
-        "statusMessage":"SUCCESS"
-    })
-});
 app.all ("*", (req,res) => res.send ("That route doesn't exist"));
 
 app.listen(port, () =>
