@@ -5,8 +5,8 @@ const router = express.Router();
 
 router.get("/groups", getGroups);
 router.post("/group", createGroup);
-router.get("/notes", getNotes);
-router.post("/note",createNote);
+router.get("/notes:id", getNotes);
+router.post("/note:id",createNote);
 router.get("/favourites", getFavourites);
 
 
