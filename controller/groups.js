@@ -11,31 +11,48 @@ export const getGroups = (req,res) =>{
 
 export const createGroup = (req,res) => {
     const group = req.body;
-    groups.push({...group, id: uuid()});
+    groups.push({...group, id: uuid(), count: 0});
     res.send("Response added Sucessfully");
 };
 
 export const getNotes = (req,res) => {
-    let id=req.params.id;
+    let id=String(req.params.id).slice(1);
     if(map.has(id)){
         res.send(map.get(id));
     }
     res.send([]);
 };
 
-export const createNote = (req,res) => {
-    let id=req.params.id;
-    const note = req.body;
-    const noteId=uuid();
-    const newNote= {...note, noteId, favourite:false};
+export const getNotesCount = (req,res) => {
+    let id=String(req.params.id).slice(1);
     if(map.has(id)){
-        map.get(id).push(newNote);
+        res.send(map.get(id).length);
+    }
+
+    res.send(0);
+};
+
+export const createNote = (req,res) => {
+    let groupId=String(req.params.id).slice(1);
+    const note = req.body;
+    const id=uuid();
+    const newNote= {...note, id, groupId, favourite:false};
+    for(let i = 0; i < groups.length; i++) {
+        let group = groups[i];
+        if (group.id === groupId) {
+           group.count = group.count + 1; 
+        }
+        groups[i] = group;
+    }
+    if(map.has(groupId)){
+        map.get(groupId).push(newNote);
     }
 
     else{
         const newNoteList=[newNote];
-        map.set(id, newNoteList);
+        map.set(groupId, newNoteList);
     }
+    console.log(map.keys);
     res.send("Response added Successfully");
 };
 
@@ -47,14 +64,17 @@ export const getFavourites = (req,res) =>{
     
 };
 
+export const addNoteToFavouriteList= (req,res) =>{
+    const note= req.body;
+    // note.favourite= true;
+
+};
 
 export const deleteGroup=(req,res)=>{
     let idnew=req.params.id;
     
     for(let i=0;i<groups.length;i++)
-    {
-
-        
+    {   
        if(idnew==":"+groups[i].id)
          
              groups.splice(i,1);
@@ -64,18 +84,25 @@ export const deleteGroup=(req,res)=>{
             }
         
         
-            
-        
 export const deleteNote=(req,res)=>{
-    let idnew=req.params.id;
-            
-            for(let i=0;i<notes.length;i++)
+    let noteId=String(req.params.id).slice(1);
+    let groupId= String(req.params.groupId).slice(1);
+console.log(noteId)
+console.log(groupId)
+            for(let i=0; i< map.get(groupId).length; i++)
             {
-                if(idnew==":"+notes[i].id)
-         
-                notes.splice(i,1);
-    
+                if(noteId===map.get(groupId)[i].id)
+                map.get(groupId).splice(i,1);
            }
+           
+           for(let i = 0; i < groups.length; i++) {
+            let group = groups[i];
+    
+            if (group.id === groupId ){
+               group.count = group.count - 1; 
+            }
+            groups[i] = group;
+        }
        return res.json({success:200, message:'The selected Note has been deleted'})
    }
    
@@ -86,36 +113,23 @@ export const deleteNote=(req,res)=>{
        for(let i=0;i<groups.length;i++)
        {
         if(idnew==":"+groups[i].id)
-         
              groups.splice(i,1);
- 
         }
-    
-    
-   
-
      let group=req.body;
      groups.push({...group, id: idnew});
-
-
     return res.json({success:200, message:'The selected Group has been Updated'})
 }
+
 
 export const updateNote=(req,res)=>{
     let idnew=req.params.id;
     for(let i=0;i<groups.length;i++)
     {
-
-        
        if(idnew==":"+groups[i].id)
          
              groups.splice(i,1);
  
         }
-    
-    
-   
-
      let group=req.body;
      groups.push({...group, id: idnew});
 
